@@ -1,0 +1,27 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80" # Nginx serving the built React app
+    depends_on:
+      - gateway
+    environment:
+      - GATEWAY_URL=http://gateway:8000
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - matplotlib-basic
+
+  matplotlib-basic:
+    build: ./services/matplotlib-basic
+    environment:
+      - SERVICE_NAME=matplotlib-basic
+    # Scale with: docker compose up --scale matplotlib-basic=3 -d
+
+
+networks:
+  default:
+    name: hackathon_net
